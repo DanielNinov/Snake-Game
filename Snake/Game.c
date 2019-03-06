@@ -3,12 +3,25 @@
 #include <time.h>
 #include <stdlib.h>
 
+//Currently the game can(?) is being drawn at 60Hz. Final product should perserve this if possible.
 
-//TODO: Snake length; Movement; Timer; Eating the food; Collisions
+//Major TODO: Snake length; Movement; Timer; Eating the food; Collisions
+//Minor TODO: !!!!!!!!! FIND A WAY TO NOT TIE THE GAME SPEED WITH THE DRAW REFRESH RATE !!!!!!!!!
 
 int row;
 int col;
+int headSnakeRow;
+int headSnakeCol;
 int boardArray[25][100];
+
+//moves the console cursor to the specified coordinates
+void goToXY(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
 
 void setup()
 {
@@ -28,13 +41,15 @@ void setup()
 	boardArray[foodRow][foodCol] = 2;
 
 	//generate two random numbers for the snake's starting location
-	int snakeRow = rand() % 25;
-	int snakeCol = rand() % 100;
-	boardArray[snakeRow][snakeCol] = 1;
+	int headSnakeRow = rand() % 25;
+	int headSnakeCol = rand() % 100;
+	boardArray[headSnakeRow][headSnakeCol] = 1;
 }
 
-void drawSnake()
+//Directions can be 1(up) 2(down) 3(right) 4(left)
+int Move()
 {
+	return 1;
 }
 
 void refreshBoard()
@@ -81,16 +96,45 @@ void mainLoop()
 {
 }
 
+//TODO: Rewrite. Currently the program crashes possibly caused by an out of bounds exception. Also I'm not liking this way of movement, 
+//possible collisions with the queue way of storing the snake. Find a better way of movement. Adjust prirority: Queue or Movement first?
+void drawSnake(int boardArray[25][100], int direction)
+{
+	if (direction <= 2)
+	{
+		switch (direction)
+		{
+		case 1:
+			boardArray[headSnakeRow][headSnakeCol] = 0;
+			boardArray[headSnakeRow - 1][headSnakeCol] = 1;
+			headSnakeRow -= 1;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+//hides the cursor from flashing around on the screen and allowes for 60Hz refresh rate that is needed
+void hideCursor()
+{
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = FALSE;
+	SetConsoleCursorInfo(consoleHandle, &info);
+}
+
 int main()
 {
+	hideCursor();
 	while(1)
 	{
-		//basic mainLoop prototype
-		int a;
 		setup();
 		refreshBoard();
-		scanf_s("%d", &a);
-		system("CLS");
+		//drawSnake(boardArray, Move());
+		//Sleep(16);
+		goToXY(0,0);
 	}
 	return 0;
 }
