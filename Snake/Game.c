@@ -2,17 +2,26 @@
 #include <windows.h>
 #include <time.h>
 #include <stdlib.h>
+#include <conio.h>
 
-//Currently the game can(?) is being drawn at 60Hz. Final product should perserve this if possible.
+//Currently the game is theoretically being drawn at 60Hz. Final product should perserve this if possible.
 
 //Major TODO: Snake length; Movement; Timer; Eating the food; Collisions
 //Minor TODO: !!!!!!!!! FIND A WAY TO NOT TIE THE GAME SPEED WITH THE DRAW REFRESH RATE !!!!!!!!!
+
+struct snakeP
+{
+	int row;
+	int col;
+	int direction; //1 up 2 down 3 left 4 right
+};
 
 int row;
 int col;
 int headSnakeRow;
 int headSnakeCol;
 int boardArray[25][100];
+struct snakeP snakeArray[2500];
 
 //moves the console cursor to the specified coordinates
 void goToXY(int x, int y)
@@ -44,12 +53,21 @@ void setup()
 	int headSnakeRow = rand() % 25;
 	int headSnakeCol = rand() % 100;
 	boardArray[headSnakeRow][headSnakeCol] = 1;
+	snakeArray[0].col = headSnakeCol;
+	snakeArray[0].row = headSnakeRow;
+	snakeArray[0].direction = 4;
 }
 
 //Directions can be 1(up) 2(down) 3(right) 4(left)
-int Move()
+void Move()
 {
-	return 1;
+	if(kbhit()){
+		switch (getch())
+		{
+		default:
+			break;
+		}
+	}
 }
 
 void refreshBoard()
@@ -98,20 +116,34 @@ void mainLoop()
 
 //TODO: Rewrite. Currently the program crashes possibly caused by an out of bounds exception. Also I'm not liking this way of movement, 
 //possible collisions with the queue way of storing the snake. Find a better way of movement. Adjust prirority: Queue or Movement first?
-void drawSnake(int boardArray[25][100], int direction)
+//11.03.2019: Uses both the boardArray and snakeArray. Changes by one the x or y of the snake and refreshes the boardArray to display changes. Still not liking
+//this way because I feel like there are too many repetitions.
+void drawSnake()
 {
-	if (direction <= 2)
+	switch (snakeArray[0].direction)
 	{
-		switch (direction)
-		{
-		case 1:
-			boardArray[headSnakeRow][headSnakeCol] = 0;
-			boardArray[headSnakeRow - 1][headSnakeCol] = 1;
-			headSnakeRow -= 1;
-			break;
-		default:
-			break;
-		}
+	case 1:
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
+		snakeArray[0].row += 1;
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
+		break;
+	case 2:
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
+		snakeArray[0].row -= 1;
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
+		break;
+	case 3:
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
+		snakeArray[0].col += 1;
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
+		break;
+	case 4:
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
+		snakeArray[0].col -= 1;
+		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -128,11 +160,13 @@ void hideCursor()
 int main()
 {
 	hideCursor();
+	setup();
+	
 	while(1)
 	{
-		setup();
 		refreshBoard();
-		//drawSnake(boardArray, Move());
+		Move();
+		drawSnake();
 		//Sleep(16);
 		goToXY(0,0);
 	}
