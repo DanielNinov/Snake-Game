@@ -9,19 +9,139 @@
 //Major TODO: Snake length; Movement; Timer; Eating the food; Collisions
 //Minor TODO: !!!!!!!!! FIND A WAY TO NOT TIE THE GAME SPEED WITH THE DRAW REFRESH RATE !!!!!!!!!
 
-struct snakeP
-{
-	int row;
-	int col;
-	int direction; //1 up 2 down 3 left 4 right
-};
-
 int row;
 int col;
 int headSnakeRow;
 int headSnakeCol;
 int boardArray[25][100];
-struct snakeP snakeArray[2500];
+
+struct snake
+{
+	int x;
+	int y;
+
+	struct snake *next;
+	struct snake *prev;
+};
+
+//this link always point to first Link
+struct snake *head = NULL;
+
+//this link always point to last Link
+struct snake *last = NULL;
+
+struct snake *current = NULL;
+
+//is list empty
+boolean isEmpty() {
+	return head == NULL;
+}
+
+//insert link at the first location
+void insertFirst(int x, int y) {
+	//create a link
+	struct snake *link = (struct snake*) malloc(sizeof(struct snake));
+	link->x = x;
+	link->y = y;
+
+	if (isEmpty()) {
+		//make it the last link
+		last = link;
+	}
+	else {
+		//update first prev link
+		head->prev = link;
+	}
+
+	//point it to old first link
+	link->next = head;
+
+	//point first to new first link
+	head = link;
+}
+
+//insert link at the last location
+void insertLast(int x, int y) {
+	//create a link
+	struct snake *link = (struct snake*) malloc(sizeof(struct snake));
+	link->x = x;
+	link->y = y;
+
+	if (isEmpty()) {
+		//make it the last link
+		last = link;
+	}
+	else {
+		//make link a new last link
+		last->next = link;
+
+		//mark old last node as prev of new link
+		link->prev = last;
+	}
+
+	//point last to new last node
+	last = link;
+}
+
+//delete first item
+struct snake* deleteFirst() {
+	//save reference to first link
+	struct snake *tempLink = head;
+
+	//if only one link
+	if (head->next == NULL) {
+		last = NULL;
+	}
+	else {
+		head->next->prev = NULL;
+	}
+
+	head = head->next;
+	//return the deleted link
+	return tempLink;
+}
+
+//delete link at the last location
+
+struct snake* deleteLast() {
+	//save reference to last link
+	struct snake *tempLink = last;
+
+	//if only one link
+	if (head->next == NULL) {
+		head = NULL;
+	}
+	else {
+		boardArray[last->x][last->y] = 0;
+		last->prev->next = NULL;
+	}
+
+	last = last->prev;
+	//return the deleted link
+	return tempLink;
+}
+
+struct snake* draw() {
+	//start from the first link
+	struct snake* current = head;
+	struct snake* previous = NULL;
+	struct snake *tempLink = last;
+
+	//if list is empty
+	if (head == NULL) {
+		return NULL;
+	}
+
+	//navigate through list
+	boardArray[current->x][current->y] = 1;
+	while (current != tempLink)
+	{
+		current = current->next;
+		boardArray[current->x][current->y] = 1;
+	}
+
+	return current;
+}
 
 //moves the console cursor to the specified coordinates
 void goToXY(int x, int y)
@@ -44,7 +164,7 @@ void setup()
 	}
 
 	//generate two random numbers for the food location
-	srand(time(NULL));   
+	srand(time(NULL));
 	int foodRow = rand() % 25;
 	int foodCol = rand() % 100;
 	boardArray[foodRow][foodCol] = 2;
@@ -52,21 +172,34 @@ void setup()
 	//generate two random numbers for the snake's starting location
 	int headSnakeRow = rand() % 25;
 	int headSnakeCol = rand() % 100;
-	boardArray[headSnakeRow][headSnakeCol] = 1;
-	snakeArray[0].col = headSnakeCol;
-	snakeArray[0].row = headSnakeRow;
-	snakeArray[0].direction = 4;
+	//insertFirst(headSnakeRow, headSnakeCol);
+	insertFirst(12, 12);
 }
 
 //Directions can be 1(up) 2(down) 3(right) 4(left)
-void Move()
+void Move(int direction)
 {
-	if(kbhit()){
-		switch (getch())
-		{
-		default:
-			break;
-		}
+	struct snake* current = head;
+	switch (direction)
+	{
+	case 1:
+		insertFirst((current->x) - 1, current->y);
+		deleteLast();
+		break;
+	case 2:
+		insertFirst((current->x) + 1, current->y);
+		deleteLast();
+		break;
+	case 3:
+		insertFirst(current->x, (current->y) + 1);
+		deleteLast();
+		break;
+	case 4:
+		insertFirst(current->x, (current->y) - 1);
+		deleteLast();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -78,7 +211,7 @@ void refreshBoard()
 	{
 		for (int col = -1; col <= 101; col++)
 		{
-			if ((row == -1 || row == 26)) 
+			if ((row == -1 || row == 26))
 			{
 				printf("#");
 				continue;
@@ -114,39 +247,6 @@ void mainLoop()
 {
 }
 
-//TODO: Rewrite. Currently the program crashes possibly caused by an out of bounds exception. Also I'm not liking this way of movement, 
-//possible collisions with the queue way of storing the snake. Find a better way of movement. Adjust prirority: Queue or Movement first?
-//11.03.2019: Uses both the boardArray and snakeArray. Changes by one the x or y of the snake and refreshes the boardArray to display changes. Still not liking
-//this way because I feel like there are too many repetitions.
-void drawSnake()
-{
-	switch (snakeArray[0].direction)
-	{
-	case 1:
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
-		snakeArray[0].row += 1;
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
-		break;
-	case 2:
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
-		snakeArray[0].row -= 1;
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
-		break;
-	case 3:
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
-		snakeArray[0].col += 1;
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
-		break;
-	case 4:
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 0;
-		snakeArray[0].col -= 1;
-		boardArray[snakeArray[0].row][snakeArray[0].col] = 1;
-		break;
-	default:
-		break;
-	}
-}
-
 //hides the cursor from flashing around on the screen and allowes for 60Hz refresh rate that is needed
 void hideCursor()
 {
@@ -161,14 +261,14 @@ int main()
 {
 	hideCursor();
 	setup();
-	
-	while(1)
+
+	while (1)
 	{
 		refreshBoard();
-		Move();
-		drawSnake();
+		Move(3);
+		draw();
 		//Sleep(16);
-		goToXY(0,0);
+		goToXY(0, 0);
 	}
 	return 0;
 }
