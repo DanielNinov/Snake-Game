@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <conio.h>
+#include "Game.h"
 
 //Currently the game is theoretically being drawn at 60Hz. Final product should perserve this if possible.
 
@@ -14,6 +15,7 @@ int col;
 int headSnakeRow;
 int headSnakeCol;
 int boardArray[25][100];
+int startingMove;
 
 struct snake
 {
@@ -174,6 +176,8 @@ void setup()
 	int headSnakeCol = rand() % 100;
 	//insertFirst(headSnakeRow, headSnakeCol);
 	insertFirst(12, 12);
+
+	startingMove = rand() % 4;
 }
 
 //Directions can be 1(up) 2(down) 3(right) 4(left)
@@ -257,6 +261,21 @@ void hideCursor()
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
 
+int getKeyboardInput()
+{
+	int a = _getch();
+	if (a == 0 || a == 0xE0) a = _getch();
+
+	if (a == 72)
+		return 1;
+	else if (a == 80)
+		return 2;
+	else if (a == 75)
+		return 4;
+	else if (a == 77)
+		return 3;
+}
+
 int main()
 {
 	hideCursor();
@@ -265,10 +284,18 @@ int main()
 	while (1)
 	{
 		refreshBoard();
-		Move(3);
+		//Directions can be 1(up) 2(down) 3(right) 4(left)
+		if (_kbhit()) 
+		{
+			Move(startingMove = getKeyboardInput());
+		}
+		else 
+		{
+			Move(startingMove);
+		}
 		draw();
-		//Sleep(16);
 		goToXY(0, 0);
+		Sleep(160);
 	}
 	return 0;
 }
