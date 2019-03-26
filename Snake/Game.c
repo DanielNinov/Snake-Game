@@ -34,22 +34,26 @@ struct snake *last = NULL;
 struct snake *current = NULL;
 
 //is list empty
-boolean isEmpty() {
+boolean isEmpty()
+{
 	return head == NULL;
 }
 
 //insert link at the first location
-void insertFirst(int x, int y) {
+void insertFirst(int x, int y)
+{
 	//create a link
 	struct snake *link = (struct snake*) malloc(sizeof(struct snake));
 	link->x = x;
 	link->y = y;
 
-	if (isEmpty()) {
+	if (isEmpty())
+	{
 		//make it the last link
 		last = link;
 	}
-	else {
+	else
+	{
 		//update first prev link
 		head->prev = link;
 	}
@@ -62,17 +66,20 @@ void insertFirst(int x, int y) {
 }
 
 //insert link at the last location
-void insertLast(int x, int y) {
+void insertLast(int x, int y)
+{
 	//create a link
 	struct snake *link = (struct snake*) malloc(sizeof(struct snake));
 	link->x = x;
 	link->y = y;
 
-	if (isEmpty()) {
+	if (isEmpty())
+	{
 		//make it the last link
 		last = link;
 	}
-	else {
+	else
+	{
 		//make link a new last link
 		last->next = link;
 
@@ -85,15 +92,18 @@ void insertLast(int x, int y) {
 }
 
 //delete first item
-struct snake* deleteFirst() {
+struct snake* deleteFirst()
+{
 	//save reference to first link
 	struct snake *tempLink = head;
 
 	//if only one link
-	if (head->next == NULL) {
+	if (head->next == NULL)
+	{
 		last = NULL;
 	}
-	else {
+	else
+	{
 		head->next->prev = NULL;
 	}
 
@@ -103,16 +113,18 @@ struct snake* deleteFirst() {
 }
 
 //delete link at the last location
-
-struct snake* deleteLast() {
+struct snake* deleteLast()
+{
 	//save reference to last link
 	struct snake *tempLink = last;
 
 	//if only one link
-	if (head->next == NULL) {
+	if (head->next == NULL)
+	{
 		head = NULL;
 	}
-	else {
+	else
+	{
 		boardArray[last->x][last->y] = 0;
 		last->prev->next = NULL;
 	}
@@ -122,14 +134,16 @@ struct snake* deleteLast() {
 	return tempLink;
 }
 
-struct snake* draw() {
+struct snake* draw()
+{
 	//start from the first link
 	struct snake* current = head;
 	struct snake* previous = NULL;
 	struct snake *tempLink = last;
 
 	//if list is empty
-	if (head == NULL) {
+	if (head == NULL)
+	{
 		return NULL;
 	}
 
@@ -289,11 +303,11 @@ int main()
 	{
 		refreshBoard();
 		//Directions can be 1(up) 2(down) 3(right) 4(left)
-		if (_kbhit()) 
+		if (_kbhit())
 		{
 			Move(startingMove = getKeyboardInput());
 		}
-		else 
+		else
 		{
 			Move(startingMove);
 		}
