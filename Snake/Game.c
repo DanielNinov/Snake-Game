@@ -175,6 +175,11 @@ void setup()
 	int headSnakeCol = rand() % 100;
 	//insertFirst(headSnakeRow, headSnakeCol);
 	insertFirst(12, 12);
+	insertLast(12, 13);
+	insertLast(12, 13);
+	insertLast(12, 13);
+	insertLast(12, 13);
+	insertLast(12, 13);
 
 	startingMove = rand() % 4;
 }
@@ -294,7 +299,8 @@ int main()
 		}
 		draw();
 		goToXY(0, 0);
-		Sleep(160);
+		if (startingMove < 3) Sleep(100);
+		Sleep(300);
 	}
 	return 0;
 }
