@@ -3,7 +3,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <conio.h>
-#include "Game.h"
 
 //Currently the game is theoretically being drawn at 60Hz. Final product should perserve this if possible.
 
