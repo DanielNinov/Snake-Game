@@ -205,18 +205,42 @@ void Move(int direction)
 	switch (direction)
 	{
 	case 1:
+		if ((current->x - 1) == -1)
+		{
+			insertFirst(25, current->y);
+			deleteLast();
+			break;
+		}
 		insertFirst((current->x) - 1, current->y);
 		deleteLast();
 		break;
 	case 2:
+		if ((current->x + 1) == 26)
+		{
+			insertFirst(0, current->y);
+			deleteLast();
+			break;
+		}
 		insertFirst((current->x) + 1, current->y);
 		deleteLast();
 		break;
 	case 3:
+		if ((current->y + 1) == 101)
+		{
+			insertFirst(current->x, 0);
+			deleteLast();
+			break;
+		}
 		insertFirst(current->x, (current->y) + 1);
 		deleteLast();
 		break;
 	case 4:
+		if ((current->y - 1) == -1)
+		{
+			insertFirst(current->x, 100);
+			deleteLast();
+			break;
+		}
 		insertFirst(current->x, (current->y) - 1);
 		deleteLast();
 		break;
