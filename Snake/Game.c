@@ -6,8 +6,7 @@
 
 //Currently the game is theoretically being drawn at 60Hz. Final product should perserve this if possible.
 
-//Major TODO: Snake length; Movement; Timer; Eating the food; Collisions
-//Minor TODO: !!!!!!!!! FIND A WAY TO NOT TIE THE GAME SPEED WITH THE DRAW REFRESH RATE !!!!!!!!!
+//Major TODO: DRAWING FUNCTIONALITY MESSES UP ON SNAKE LOOP ON THE X AXIS CHECK AND FIX THE SNAKE GAME BOARD IS CORRECT DRAW IS WRONG
 
 int row;
 int col;
@@ -188,12 +187,12 @@ void setup()
 	int headSnakeRow = rand() % 25;
 	int headSnakeCol = rand() % 100;
 	//insertFirst(headSnakeRow, headSnakeCol);
-	insertFirst(12, 12);
-	insertLast(12, 13);
-	insertLast(12, 13);
-	insertLast(12, 13);
-	insertLast(12, 13);
-	insertLast(12, 13);
+	insertFirst(3, 1);
+	insertLast(4, 1);
+	insertLast(5, 1);
+	insertLast(6, 1);
+	insertLast(7, 1);
+	insertLast(8, 1);
 
 	startingMove = rand() % 4;
 }
@@ -205,42 +204,50 @@ void Move(int direction)
 	switch (direction)
 	{
 	case 1:
+		//Checks for wall collision and loops the snake if it detects such
 		if ((current->x - 1) == -1)
 		{
 			insertFirst(25, current->y);
 			deleteLast();
 			break;
 		}
+
 		insertFirst((current->x) - 1, current->y);
 		deleteLast();
 		break;
 	case 2:
+		//Checks for wall collision and loops the snake if it detects such
 		if ((current->x + 1) == 26)
 		{
 			insertFirst(0, current->y);
 			deleteLast();
 			break;
 		}
+
 		insertFirst((current->x) + 1, current->y);
 		deleteLast();
 		break;
 	case 3:
+		//Checks for wall collision and loops the snake if it detects such
 		if ((current->y + 1) == 101)
 		{
 			insertFirst(current->x, 0);
 			deleteLast();
 			break;
 		}
+
 		insertFirst(current->x, (current->y) + 1);
 		deleteLast();
 		break;
 	case 4:
+		//Checks for wall collision and loops the snake if it detects such
 		if ((current->y - 1) == -1)
 		{
 			insertFirst(current->x, 100);
 			deleteLast();
 			break;
 		}
+
 		insertFirst(current->x, (current->y) - 1);
 		deleteLast();
 		break;
