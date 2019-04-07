@@ -12,7 +12,7 @@ int row;
 int col;
 int headSnakeRow;
 int headSnakeCol;
-int boardArray[25][100];
+int boardArray[25][25];
 int startingMove;
 
 struct snake
@@ -171,7 +171,7 @@ void setup()
 	//fill the game board with empty values
 	for (int row = 0; row < 25; row++)
 	{
-		for (int col = 0; col < 100; col++)
+		for (int col = 0; col < 25; col++)
 		{
 			boardArray[row][col] = 0;
 		}
@@ -180,19 +180,19 @@ void setup()
 	//generate two random numbers for the food location
 	srand(time(NULL));
 	int foodRow = rand() % 25;
-	int foodCol = rand() % 100;
+	int foodCol = rand() % 25;
 	boardArray[foodRow][foodCol] = 2;
 
 	//generate two random numbers for the snake's starting location
 	int headSnakeRow = rand() % 25;
-	int headSnakeCol = rand() % 100;
-	//insertFirst(headSnakeRow, headSnakeCol);
-	insertFirst(3, 1);
-	insertLast(4, 1);
-	insertLast(5, 1);
-	insertLast(6, 1);
-	insertLast(7, 1);
-	insertLast(8, 1);
+	int headSnakeCol = rand() % 25;
+	insertFirst(headSnakeRow, headSnakeCol);
+	//insertFirst(3, 1);
+	//insertLast(4, 1);
+	//insertLast(5, 1);
+	//insertLast(6, 1);
+	//insertLast(7, 1);
+	//insertLast(8, 1);
 
 	startingMove = rand() % 4;
 }
@@ -208,11 +208,19 @@ void Move(int direction)
 		if ((current->x - 1) == -1)
 		{
 			insertFirst(25, current->y);
+			if (food(25, current->y))
+			{
+				//deleteLast();
+			}
 			deleteLast();
 			break;
 		}
 
 		insertFirst((current->x) - 1, current->y);
+		if (food((current->x) - 1, current->y))
+		{
+			//deleteLast();
+		}
 		deleteLast();
 		break;
 	case 2:
@@ -220,35 +228,59 @@ void Move(int direction)
 		if ((current->x + 1) == 26)
 		{
 			insertFirst(0, current->y);
+			if (food(0, current->y))
+			{
+				//deleteLast();
+			}
 			deleteLast();
 			break;
 		}
 
 		insertFirst((current->x) + 1, current->y);
+		if (food((current->x) + 1, current->y))
+		{
+			//deleteLast();
+		}
 		deleteLast();
 		break;
 	case 3:
 		//Checks for wall collision and loops the snake if it detects such
-		if ((current->y + 1) == 101)
+		if ((current->y + 1) == 26)
 		{
 			insertFirst(current->x, 0);
+			if (food(current->x, 0))
+			{
+				//deleteLast();
+			}
 			deleteLast();
 			break;
 		}
 
 		insertFirst(current->x, (current->y) + 1);
+		if (food(current->x, (current->y) + 1))
+		{
+			//deleteLast();
+		}
 		deleteLast();
 		break;
 	case 4:
 		//Checks for wall collision and loops the snake if it detects such
 		if ((current->y - 1) == -1)
 		{
-			insertFirst(current->x, 100);
+			insertFirst(current->x, 25);
+			if (food(current->x, 25))
+			{
+				//deleteLast();
+			}
 			deleteLast();
 			break;
 		}
 
 		insertFirst(current->x, (current->y) - 1);
+		if (food(current->x, (current->y) - 1))
+		{
+			//deleteLast();
+		}
 		deleteLast();
 		break;
 	default:
@@ -262,7 +294,7 @@ void refreshBoard()
 	//same applies for the columns
 	for (int row = -1; row <= 26; row++)
 	{
-		for (int col = -1; col <= 101; col++)
+		for (int col = -1; col <= 26; col++)
 		{
 			if ((row == -1 || row == 26))
 			{
@@ -270,7 +302,7 @@ void refreshBoard()
 				continue;
 			}
 
-			if ((col == -1 || col == 101))
+			if ((col == -1 || col == 26))
 			{
 				printf("#");
 				continue;
@@ -296,8 +328,24 @@ void refreshBoard()
 	}
 }
 
-void mainLoop()
+void generateFood()
 {
+	srand(time(NULL));
+	int foodRow = rand() % 25;
+	int foodCol = rand() % 25;
+	boardArray[foodRow][foodCol] = 2;
+}
+
+int food(int x, int y)
+{
+	if (boardArray[x][y] == 2)
+	{
+		insertFirst(x, y);
+		boardArray[x][y] == 0;
+		generateFood();
+		return 0;
+	}
+	return 1;
 }
 
 //hides the cursor from flashing around on the screen and allowes for 60Hz refresh rate that is needed
@@ -344,8 +392,14 @@ int main()
 		}
 		draw();
 		goToXY(0, 0);
-		if (startingMove < 3) Sleep(100);
-		Sleep(300);
+		if (startingMove < 3)
+		{
+			Sleep(200);
+		}
+		else
+		{
+			Sleep(100);
+		}
 	}
 	return 0;
 }
