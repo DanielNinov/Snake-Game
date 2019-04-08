@@ -48,6 +48,17 @@ void goToXY(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+void endGameCheck(int x, int y)
+{
+	if (boardArray[x][y] == 1)
+	{
+		system("cls");
+		printf("GAME OVER \n");
+		printf("Score: %d \n", scoreTracker);
+		exit(0);
+	}
+}
+
 //insert link at the first location
 void insertFirst(int x, int y)
 {
@@ -56,14 +67,7 @@ void insertFirst(int x, int y)
 	link->x = x;
 	link->y = y;
 
-	if (boardArray[x][y] == 1)
-	{
-		//goToXY(0, 0);
-		system("cls");
-		printf("GAME OVER \n");
-		printf("Score: %d \n", scoreTracker);
-		exit(0);
-	}
+	endGameCheck(x,y);
 
 	if (isEmpty())
 	{
@@ -207,6 +211,25 @@ void setup()
 	startingMove = rand() % 4;
 }
 
+void generateFood()
+{
+	srand(time(NULL));
+	int foodRow = rand() % 25;
+	int foodCol = rand() % 25;
+	boardArray[foodRow][foodCol] = 2;
+	scoreTracker += 10;
+}
+
+void food(int x, int y)
+{
+	if (boardArray[x][y] == 2)
+	{
+		insertFirst(x, y);
+		boardArray[x][y] == 0;
+		generateFood();
+	}
+}
+
 //Directions can be 1(up) 2(down) 3(right) 4(left)
 void Move(int direction)
 {
@@ -218,19 +241,13 @@ void Move(int direction)
 		if ((current->x - 1) == -1)
 		{
 			insertFirst(25, current->y);
-			if (food(25, current->y))
-			{
-				//deleteLast();
-			}
+			food(25, current->y);
 			deleteLast();
 			break;
 		}
 
 		insertFirst((current->x) - 1, current->y);
-		if (food((current->x) - 1, current->y))
-		{
-			//deleteLast();
-		}
+		food((current->x) - 1, current->y);
 		deleteLast();
 		break;
 	case 2:
@@ -238,19 +255,13 @@ void Move(int direction)
 		if ((current->x + 1) == 26)
 		{
 			insertFirst(0, current->y);
-			if (food(0, current->y))
-			{
-				//deleteLast();
-			}
+			food(0, current->y);
 			deleteLast();
 			break;
 		}
 
 		insertFirst((current->x) + 1, current->y);
-		if (food((current->x) + 1, current->y))
-		{
-			//deleteLast();
-		}
+		food((current->x) + 1, current->y);
 		deleteLast();
 		break;
 	case 3:
@@ -258,19 +269,13 @@ void Move(int direction)
 		if ((current->y + 1) == 26)
 		{
 			insertFirst(current->x, 0);
-			if (food(current->x, 0))
-			{
-				//deleteLast();
-			}
+			food(current->x, 0);
 			deleteLast();
 			break;
 		}
 
 		insertFirst(current->x, (current->y) + 1);
-		if (food(current->x, (current->y) + 1))
-		{
-			//deleteLast();
-		}
+		food(current->x, (current->y) + 1);
 		deleteLast();
 		break;
 	case 4:
@@ -278,19 +283,13 @@ void Move(int direction)
 		if ((current->y - 1) == -1)
 		{
 			insertFirst(current->x, 25);
-			if (food(current->x, 25))
-			{
-				//deleteLast();
-			}
+			food(current->x, 25);
 			deleteLast();
 			break;
 		}
 
 		insertFirst(current->x, (current->y) - 1);
-		if (food(current->x, (current->y) - 1))
-		{
-			//deleteLast();
-		}
+		food(current->x, (current->y) - 1);
 		deleteLast();
 		break;
 	default:
@@ -337,27 +336,6 @@ void refreshBoard()
 		printf("\n");
 	}
 	printf("Score: %d", scoreTracker);
-}
-
-void generateFood()
-{
-	srand(time(NULL));
-	int foodRow = rand() % 25;
-	int foodCol = rand() % 25;
-	boardArray[foodRow][foodCol] = 2;
-	scoreTracker += 10;
-}
-
-int food(int x, int y)
-{
-	if (boardArray[x][y] == 2)
-	{
-		insertFirst(x, y);
-		boardArray[x][y] == 0;
-		generateFood();
-		return 0;
-	}
-	return 1;
 }
 
 //hides the cursor from flashing around on the screen and allowes for 60Hz refresh rate that is needed
