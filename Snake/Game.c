@@ -14,6 +14,7 @@ int headSnakeRow;
 int headSnakeCol;
 int boardArray[25][25];
 int startingMove;
+int scoreTracker;
 
 struct snake
 {
@@ -38,6 +39,15 @@ boolean isEmpty()
 	return head == NULL;
 }
 
+//moves the console cursor to the specified coordinates
+void goToXY(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
 //insert link at the first location
 void insertFirst(int x, int y)
 {
@@ -45,6 +55,15 @@ void insertFirst(int x, int y)
 	struct snake *link = (struct snake*) malloc(sizeof(struct snake));
 	link->x = x;
 	link->y = y;
+
+	if (boardArray[x][y] == 1)
+	{
+		//goToXY(0, 0);
+		system("cls");
+		printf("GAME OVER \n");
+		printf("Score: %d \n", scoreTracker);
+		exit(0);
+	}
 
 	if (isEmpty())
 	{
@@ -155,15 +174,6 @@ struct snake* draw()
 	}
 
 	return current;
-}
-
-//moves the console cursor to the specified coordinates
-void goToXY(int x, int y)
-{
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
 void setup()
@@ -326,6 +336,7 @@ void refreshBoard()
 		}
 		printf("\n");
 	}
+	printf("Score: %d", scoreTracker);
 }
 
 void generateFood()
@@ -334,6 +345,7 @@ void generateFood()
 	int foodRow = rand() % 25;
 	int foodCol = rand() % 25;
 	boardArray[foodRow][foodCol] = 2;
+	scoreTracker += 10;
 }
 
 int food(int x, int y)
