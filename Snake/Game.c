@@ -4,10 +4,6 @@
 #include <stdlib.h>
 #include <conio.h>
 
-//Currently the game is theoretically being drawn at 60Hz. Final product should perserve this if possible.
-
-//Major TODO: DRAWING FUNCTIONALITY MESSES UP ON SNAKE LOOP ON THE X AXIS CHECK AND FIX THE SNAKE GAME BOARD IS CORRECT DRAW IS WRONG
-
 int row;
 int col;
 int headSnakeRow;
@@ -111,27 +107,6 @@ void insertLast(int x, int y)
 
 	//point last to new last node
 	last = link;
-}
-
-//delete first item
-struct snake* deleteFirst()
-{
-	//save reference to first link
-	struct snake *tempLink = head;
-
-	//if only one link
-	if (head->next == NULL)
-	{
-		last = NULL;
-	}
-	else
-	{
-		head->next->prev = NULL;
-	}
-
-	head = head->next;
-	//return the deleted link
-	return tempLink;
 }
 
 //delete link at the last location
