@@ -67,7 +67,7 @@ void insertFirst(int x, int y)
 	link->x = x;
 	link->y = y;
 
-	endGameCheck(x,y);
+	endGameCheck(x, y);
 
 	if (isEmpty())
 	{
@@ -200,13 +200,8 @@ void setup()
 	//generate two random numbers for the snake's starting location
 	int headSnakeRow = rand() % 25;
 	int headSnakeCol = rand() % 25;
-	insertFirst(headSnakeRow, headSnakeCol);
-	//insertFirst(3, 1);
-	//insertLast(4, 1);
-	//insertLast(5, 1);
-	//insertLast(6, 1);
-	//insertLast(7, 1);
-	//insertLast(8, 1);
+	//insertFirst(headSnakeRow, headSnakeCol);
+	insertFirst(5, 0);
 
 	startingMove = rand() % 4;
 }
@@ -353,14 +348,19 @@ int getKeyboardInput()
 	int a = _getch();
 	if (a == 0 || a == 0xE0) a = _getch();
 
-	if (a == 72)
+	switch (a)
+	{
+	case 72:
 		return 1;
-	else if (a == 80)
+	case 80:
 		return 2;
-	else if (a == 75)
+	case 75:
 		return 4;
-	else if (a == 77)
+	case 77:
 		return 3;
+	default:
+		return startingMove;
+	}
 }
 
 int main()
@@ -370,6 +370,7 @@ int main()
 
 	while (1)
 	{
+		draw();
 		refreshBoard();
 		//Directions can be 1(up) 2(down) 3(right) 4(left)
 		if (_kbhit())
@@ -380,7 +381,6 @@ int main()
 		{
 			Move(startingMove);
 		}
-		draw();
 		goToXY(0, 0);
 		if (startingMove < 3)
 		{
