@@ -11,6 +11,7 @@ int headSnakeCol;
 int boardArray[25][25];
 int startingMove;
 int scoreTracker;
+int difficulty;
 
 struct snake
 {
@@ -326,23 +327,57 @@ int getKeyboardInput()
 	{
 	case 'w':
 	case 'W':
+		//Checks if the entered direction is not the complete opposite of the current one
+		if (startingMove == 2) return startingMove;
 		return 1;
 	case 's':
 	case 'S':
+		if (startingMove == 1) return startingMove;
 		return 2;
 	case 'd':
 	case 'D':
+		if (startingMove == 4) return startingMove;
 		return 3;
 	case 'a':
 	case 'A':
+		if (startingMove == 3) return startingMove;
 		return 4;
 	default:
 		return startingMove;
 	}
 }
 
+void menuScreen() {
+	while (1) {
+		system("cls");
+		printf("Wellcome to the Snake Game ver. 1.1 \n");
+		printf("Please pick a difficulty: \n");
+		printf("1. Easy \n");
+		printf("2. Medium \n");
+		printf("3. Hard \n");
+		scanf("%d", &difficulty);
+		switch (difficulty)
+		{
+		case 1:
+			difficulty = 300;
+			return;
+		case 2: 
+			difficulty = 200;
+			return;
+		case 3: 
+			difficulty = 100;
+			return;
+		default:
+			break;
+		}
+	}
+}
+
 int main()
 {
+	menuScreen();
+	system("cls");
+
 	hideCursor();
 	setup();
 
@@ -360,14 +395,8 @@ int main()
 			Move(startingMove);
 		}
 		goToXY(0, 0);
-		if (startingMove < 3)
-		{
-			Sleep(200);
-		}
-		else
-		{
-			Sleep(100);
-		}
+		//The difficulty property is an int between 100 and 300 (hard/normal/easy) that controlls the speed of the game
+		Sleep(difficulty);
 	}
 	return 0;
 }
