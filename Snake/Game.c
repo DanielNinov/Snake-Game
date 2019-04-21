@@ -84,6 +84,7 @@ void insertFirst(int x, int y)
 }
 
 //insert link at the last location
+//Although this function is not used in the program it is critical for debugging
 void insertLast(int x, int y)
 {
 	//create a link
@@ -158,9 +159,9 @@ struct snake* draw()
 void setup()
 {
 	//fill the game board with empty values
-	for (int row = 0; row < 25; row++)
+	for (int row = 0; row < 24; row++)
 	{
-		for (int col = 0; col < 25; col++)
+		for (int col = 0; col < 24; col++)
 		{
 			boardArray[row][col] = 0;
 		}
@@ -168,15 +169,15 @@ void setup()
 
 	//generate two random numbers for the food location
 	srand(time(NULL));
-	int foodRow = rand() % 25;
-	int foodCol = rand() % 25;
+	int foodRow = rand() % 24;
+	int foodCol = rand() % 24;
 	boardArray[foodRow][foodCol] = 2;
 
 	//generate two random numbers for the snake's starting location
-	int headSnakeRow = rand() % 25;
-	int headSnakeCol = rand() % 25;
-	//insertFirst(headSnakeRow, headSnakeCol);
-	insertFirst(5, 0);
+	int headSnakeRow = rand() % 24;
+	int headSnakeCol = rand() % 24;
+	insertFirst(headSnakeRow, headSnakeCol);
+	//insertFirst(5, 0);
 
 	startingMove = rand() % 4;
 }
