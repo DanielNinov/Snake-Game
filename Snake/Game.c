@@ -208,10 +208,11 @@ void Move(int direction)
 	{
 	case 1:
 		//Checks for wall collision and loops the snake if it detects such
+		//Also checks for collision with food
 		if ((current->x - 1) == -1)
 		{
-			insertFirst(25, current->y);
-			food(25, current->y);
+			insertFirst(24, current->y);
+			food(24, current->y);
 			deleteLast();
 			break;
 		}
@@ -221,8 +222,7 @@ void Move(int direction)
 		deleteLast();
 		break;
 	case 2:
-		//Checks for wall collision and loops the snake if it detects such
-		if ((current->x + 1) == 26)
+		if ((current->x + 1) == 25)
 		{
 			insertFirst(0, current->y);
 			food(0, current->y);
@@ -235,8 +235,7 @@ void Move(int direction)
 		deleteLast();
 		break;
 	case 3:
-		//Checks for wall collision and loops the snake if it detects such
-		if ((current->y + 1) == 26)
+		if ((current->y + 1) == 25)
 		{
 			insertFirst(current->x, 0);
 			food(current->x, 0);
@@ -249,11 +248,10 @@ void Move(int direction)
 		deleteLast();
 		break;
 	case 4:
-		//Checks for wall collision and loops the snake if it detects such
 		if ((current->y - 1) == -1)
 		{
-			insertFirst(current->x, 25);
-			food(current->x, 25);
+			insertFirst(current->x, 24);
+			food(current->x, 24);
 			deleteLast();
 			break;
 		}
@@ -269,19 +267,17 @@ void Move(int direction)
 
 void refreshBoard()
 {
-	//loops though all rows and starts with -1 because when its -1 its a border draw space, that way it's assured that the game area is 25x100 inside the border
-	//same applies for the columns
-	for (int row = -1; row <= 26; row++)
+	for (int row = -1; row <= 25; row++)
 	{
-		for (int col = -1; col <= 26; col++)
+		for (int col = -1; col <= 25; col++)
 		{
-			if ((row == -1 || row == 26))
+			if ((row == -1 || row == 25))
 			{
 				printf("#");
 				continue;
 			}
 
-			if ((col == -1 || col == 26))
+			if ((col == -1 || col == 25))
 			{
 				printf("#");
 				continue;
@@ -318,21 +314,27 @@ void hideCursor()
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
 
+//Gets the arrow
+//Directions can be 1(up) 2(down) 3(right) 4(left)
 int getKeyboardInput()
 {
-	int a = _getch();
-	if (a == 0 || a == 0xE0) a = _getch();
+	/*int a = _getch();
+	if (a == 0 || a == 0xE0) a = _getch();*/
 
-	switch (a)
+	switch (getch())
 	{
-	case 72:
+	case 'w':
+	case 'W':
 		return 1;
-	case 80:
+	case 's':
+	case 'S':
 		return 2;
-	case 75:
-		return 4;
-	case 77:
+	case 'd':
+	case 'D':
 		return 3;
+	case 'a':
+	case 'A':
+		return 4;
 	default:
 		return startingMove;
 	}
