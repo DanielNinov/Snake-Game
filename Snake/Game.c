@@ -52,6 +52,7 @@ void endGameCheck(int x, int y)
 		system("cls");
 		printf("GAME OVER \n");
 		printf("Score: %d \n", scoreTracker);
+		Sleep(100000);
 		exit(0);
 	}
 }
@@ -197,7 +198,7 @@ void food(int x, int y)
 	if (boardArray[x][y] == 2)
 	{
 		insertFirst(x, y);
-		boardArray[x][y] == 0;
+		boardArray[x][y] = 0;
 		generateFood();
 	}
 }
