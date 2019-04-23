@@ -186,11 +186,19 @@ void setup()
 
 void generateFood()
 {
-	srand(time(NULL));
-	int foodRow = rand() % 25;
-	int foodCol = rand() % 25;
-	boardArray[foodRow][foodCol] = 2;
-	scoreTracker += 10;
+	int isGeneratedSuccessfully = 0;
+
+	while (isGeneratedSuccessfully == 0) {
+		srand(time(NULL));
+		int foodRow = rand() % 25;
+		int foodCol = rand() % 25;
+		if (boardArray[foodRow][foodCol] == 1) {
+			continue;
+		}
+		boardArray[foodRow][foodCol] = 2;
+		scoreTracker += 10;
+		isGeneratedSuccessfully++;
+	}
 }
 
 void food(int x, int y)
