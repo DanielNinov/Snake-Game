@@ -364,7 +364,12 @@ void menuScreen() {
 		printf("1. Easy \n");
 		printf("2. Medium \n");
 		printf("3. Hard \n");
-		scanf("%d", &difficulty);
+
+		if (scanf("%d", &difficulty) != 1) {
+			scanf("%*[^\n]");
+			scanf("%*c");
+			continue;
+		}
 		switch (difficulty)
 		{
 		case 1:
